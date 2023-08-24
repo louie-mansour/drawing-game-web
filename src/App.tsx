@@ -1,16 +1,15 @@
-
-import './App.css';
-import DrawingArea from './DrawingArea';
+import './App.css'
+import DrawingArea from './drawing-area/DrawingArea'
 
 function App() {
   return (
     <>
       <h1> Drawing Area</h1>
       <div className="App drawing-area">
-          <DrawingArea />
+        <DrawingArea />
       </div>
     </>
-  );
+  )
 }
 
-export default App;
+export default App
