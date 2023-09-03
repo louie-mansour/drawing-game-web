@@ -1,6 +1,6 @@
 const SubmitButton = ({ completeDrawing }: { completeDrawing: () => void }) => {
   return (
-    <button onClick={completeDrawing} type="submit">
+    <button className="submit-drawing" onClick={completeDrawing} type="submit">
       Click to submit
     </button>
   )

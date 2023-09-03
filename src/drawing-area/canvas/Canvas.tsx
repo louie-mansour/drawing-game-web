@@ -10,9 +10,13 @@ interface Lines {
 const Canvas = ({
   drawingState,
   setFinishedDrawing,
+  isReset,
+  endReset,
 }: {
   drawingState: DrawingState
   setFinishedDrawing: (_: FinishedDrawing) => void
+  isReset: boolean
+  endReset: () => void
 }) => {
   const [lines, setLines] = useState<Lines[]>([])
 
@@ -26,6 +30,14 @@ const Canvas = ({
       })
     }
   }, [drawingState, setFinishedDrawing])
+
+  useEffect(() => {
+    if (isReset) {
+      setLines([])
+      stageRef.current.clearCache()
+      endReset()
+    }
+  }, [isReset, endReset])
 
   const handleMouseDown = (e: KonvaEventObject<MouseEvent>) => {
     isDrawing.current = true
@@ -54,14 +66,15 @@ const Canvas = ({
   }
 
   return (
-    <div className=" text-center text-dark">
+    <div className="canvas">
       <Stage
         ref={stageRef}
         width={600}
-        height={600}
+        height={194}
         onMouseDown={handleMouseDown}
         onMousemove={handleMouseMove}
         onMouseup={handleMouseUp}
+        onMouseLeave={handleMouseUp}
         className="canvas-stage"
       >
         <Layer>

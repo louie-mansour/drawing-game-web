@@ -1,11 +1,11 @@
-import './App.css'
+import './app.scss'
 import DrawingArea from './drawing-area/DrawingArea'
 
 function App() {
   return (
     <>
       <h1> Drawing Area</h1>
-      <div className="App drawing-area">
+      <div className="app">
         <DrawingArea />
       </div>
     </>
