@@ -1,20 +1,20 @@
 import { Stage, Layer, Line } from 'react-konva'
 import { useState, useRef, useEffect } from 'react'
 import { KonvaEventObject } from 'konva/lib/Node'
-import { DrawingState, FinishedDrawing } from '../DrawingArea'
+import { DrawingPartState, FinishedDrawingPart } from '../DrawingArea'
 
 interface Lines {
   points: number[]
 }
 
 const Canvas = ({
-  drawingState,
-  setFinishedDrawing,
+  drawingPartState,
+  setFinishedDrawingPart,
   isReset,
   endReset,
 }: {
-  drawingState: DrawingState
-  setFinishedDrawing: (_: FinishedDrawing) => void
+  drawingPartState: DrawingPartState
+  setFinishedDrawingPart: (_: FinishedDrawingPart) => void
   isReset: boolean
   endReset: () => void
 }) => {
@@ -24,12 +24,12 @@ const Canvas = ({
   const stageRef = useRef<any>(null) // eslint-disable-line @typescript-eslint/no-explicit-any
 
   useEffect(() => {
-    if (drawingState === DrawingState.Completed) {
-      setFinishedDrawing({
+    if (drawingPartState === DrawingPartState.Completed) {
+      setFinishedDrawingPart({
         base64Image: stageRef.current.toDataURL(),
       })
     }
-  }, [drawingState, setFinishedDrawing])
+  }, [drawingPartState, setFinishedDrawingPart])
 
   useEffect(() => {
     if (isReset) {

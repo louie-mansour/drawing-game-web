@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import './app.scss'
-import DrawingArea from './drawing-area/DrawingArea'
+import DrawingArea from './components/drawing-area/DrawingArea'
 import { guestLogin } from './services/UserService'
 import Cookies from 'universal-cookie'
 

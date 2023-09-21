@@ -1,8 +1,8 @@
 import axios from 'axios'
 import Cookies from 'universal-cookie'
-import { FinishedDrawing } from '../drawing-area/DrawingArea'
+import { FinishedDrawingPart } from '../components/drawing-area/DrawingArea'
 
-export const submitFinishedDrawing = async (drawing: FinishedDrawing): Promise<FinishedDrawing> => {
+export const submitFinishedDrawingPart = async (drawing: FinishedDrawingPart): Promise<FinishedDrawingPart> => {
   const cookies = new Cookies()
   const accessToken = cookies.get('drawing_accesstoken')
   const res = await axios.put(
@@ -19,7 +19,7 @@ export const submitFinishedDrawing = async (drawing: FinishedDrawing): Promise<F
   }
 }
 
-export const getPreviousDrawing = async (): Promise<FinishedDrawing> => {
+export const getPreviousDrawingPart = async (): Promise<FinishedDrawingPart> => {
   const cookies = new Cookies()
   const accessToken = cookies.get('drawing_accesstoken')
   const res = await axios.get('/drawing/previous', {
