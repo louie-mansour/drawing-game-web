@@ -50,6 +50,7 @@ const DrawingArea = () => {
 
   return (
     <div>
+      <h1> Drawing Area</h1>
       <div className="drawing-area">
         {previousDrawingPart ? <Sliver previousDrawingPart={previousDrawingPart} /> : null}
         <Canvas

@@ -2,7 +2,6 @@ import { useState } from 'react'
 import './join-game.scss'
 
 const JoinGame = ({ setInvite }: { setInvite: (invite: string) => void }) => {
-
   const [invite, setInviteLocal] = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,9 +17,9 @@ const JoinGame = ({ setInvite }: { setInvite: (invite: string) => void }) => {
       <form className="join-game__invite-form">
         <label className="join-game__invite-label">
           Invite:
-          <input className="join-game__invite-input" type="text" name="invite" onChange={handleChange}/>
+          <input className="join-game__invite-input" type="text" name="invite" onChange={handleChange} />
         </label>
-        <input className="join-game__invite-button" type="button" value="Join" onClick={handleSubmit}/>
+        <input className="join-game__invite-button" type="button" value="Join" onClick={handleSubmit} />
       </form>
     </div>
   )

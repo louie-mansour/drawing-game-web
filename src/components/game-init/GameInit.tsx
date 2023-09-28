@@ -39,9 +39,9 @@ const GameInit = () => {
 
   return (
     <div className="game-init">
-      <SetUsername setUsername={setUsername}/>
+      <SetUsername setUsername={setUsername} />
       <JoinGame setInvite={setInvite} />
-      <CreateGame createGame={createNewGame}/>
+      <CreateGame createGame={createNewGame} />
     </div>
   )
 }

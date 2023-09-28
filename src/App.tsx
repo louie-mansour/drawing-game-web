@@ -1,28 +1,33 @@
+import { useEffect, useState } from 'react'
 import './app.scss'
+import DrawingArea from './components/drawing-area/DrawingArea'
 import GameInit from './components/game-init/GameInit'
-// import DrawingArea from './components/drawing-area/DrawingArea'
+import Lobby from './components/lobby/Lobby'
+import { Game, GameState } from './models/Game'
+import { getGame } from './services/GameService'
 
 function App() {
-  // useEffect(() => {
-  //   const loginAsGuest = async () => {
-  //     const accessToken = await guestLogin()
-  //     const cookies = new Cookies()
-  //     cookies.set('drawing_accesstoken', accessToken, {
-  //       path: '/',
-  //       secure: true,
-  //       httpOnly: false,
-  //       sameSite: 'strict',
-  //     })
-  //   }
+  const [game, setGame] = useState<Game | null>(null)
 
-  //   loginAsGuest()
-  // })
+  useEffect(() => {
+    const intervalCall = setInterval(() => {
+      const getGameUseCase = async () => {
+        const game = await getGame()
+        setGame(game)
+      }
+      getGameUseCase()
+    }, 5000)
+    return () => {
+      clearInterval(intervalCall)
+    }
+  })
+
   return (
     <>
-      <h1> Drawing Area</h1>
       <div className="app">
-        <GameInit />
-        {/* <DrawingArea /> */}
+        {!game && <GameInit />}
+        {game?.state === GameState.Lobby && <Lobby invite={game.invite} players={game.players} />}
+        {game?.state === GameState.DrawingInProgress && <DrawingArea />}
       </div>
     </>
   )
