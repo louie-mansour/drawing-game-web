@@ -1,13 +1,14 @@
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 import Cookies from 'universal-cookie'
 import { Game, GameState } from '../models/Game'
+import { Player } from '../models/Player'
 
 export const createGame = async (): Promise<Game> => {
   const cookies = new Cookies()
   const accessToken = cookies.get('drawing_accesstoken')
   const res = await axios.post('/game/create', undefined, header(accessToken))
 
-  const game = toGame(res)
+  const game = toGame(res.data.game)
   cookies.set('drawing_inviteid', game.invite)
   return game
 }
@@ -25,7 +26,7 @@ export const joinGame = async (inviteCode: string): Promise<Game> => {
     header(accessToken)
   )
 
-  const game = toGame(res)
+  const game = toGame(res.data.game)
   cookies.set('drawing_inviteid', game.uuid)
   return game
 }
@@ -39,7 +40,7 @@ export const getGame = async (): Promise<Game | null> => {
     return null
   }
   const res = await axios.get(`/game/${inviteId}`, header(accessToken))
-  return toGame(res)
+  return toGame(res.data.game)
 }
 
 const header = (accessToken: string) => {
@@ -50,12 +51,23 @@ const header = (accessToken: string) => {
   }
 }
 
-const toGame = (res: AxiosResponse): Game => {
-  const { order_uuid, invite, players, uuid, state } = res.data.game
+export const playerReady = async (): Promise<Game> => {
+  const cookies = new Cookies()
+  const accessToken = cookies.get('drawing_accesstoken')
+  const inviteId = cookies.get('drawing_inviteid')
+  const res = await axios.put('/game/player-ready', { game: { invite: inviteId } }, header(accessToken))
+
+  return toGame(res.data.game)
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const toGame = (game: any): Game => {
+  const { order_uuid, invite, players, uuid, state } = game
   return {
     ownerUuid: order_uuid,
     invite: invite,
-    players: players,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    players: players.map((p: any) => toPlayer(p)),
     uuid: uuid,
     state: toGameState(state),
   }
@@ -69,4 +81,13 @@ const toGameState = (state: string): GameState => {
     return GameState.DrawingInProgress
   }
   throw Error('unrecognized state')
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const toPlayer = (player: any): Player => {
+  return {
+    uuid: player.uuid,
+    username: player.username,
+    isReady: player.is_ready,
+  }
 }

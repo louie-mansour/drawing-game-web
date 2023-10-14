@@ -23,5 +23,6 @@ export const guestLogin = async (username: string): Promise<Player> => {
   return {
     uuid: res.data.player.uuid,
     username: res.data.player.username,
+    isReady: res.data.player.is_ready,
   }
 }

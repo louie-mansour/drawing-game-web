@@ -10,23 +10,24 @@ function App() {
   const [game, setGame] = useState<Game | null>(null)
 
   useEffect(() => {
+    const getGameUseCase = async () => {
+      const game = await getGame()
+      setGame(game)
+    }
+    getGameUseCase()
     const intervalCall = setInterval(() => {
-      const getGameUseCase = async () => {
-        const game = await getGame()
-        setGame(game)
-      }
       getGameUseCase()
     }, 5000)
     return () => {
       clearInterval(intervalCall)
     }
-  })
+  }, [])
 
   return (
     <>
       <div className="app">
         {!game && <GameInit />}
-        {game?.state === GameState.Lobby && <Lobby invite={game.invite} players={game.players} />}
+        {game?.state === GameState.Lobby && <Lobby invite={game.invite} players={game.players} setGame={setGame} />}
         {game?.state === GameState.DrawingInProgress && <DrawingArea />}
       </div>
     </>
