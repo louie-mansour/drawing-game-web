@@ -27,7 +27,9 @@ function App() {
     <>
       <div className="app">
         {!game && <GameInit />}
-        {game?.state === GameState.Lobby && <Lobby invite={game.invite} players={game.players} setGame={setGame} />}
+        {game?.state === GameState.Lobby && (
+          <Lobby invite={game.invite} players={game.players} ownerUuid={game.ownerUuid} setGame={setGame} />
+        )}
         {game?.state === GameState.DrawingInProgress && <DrawingArea />}
       </div>
     </>

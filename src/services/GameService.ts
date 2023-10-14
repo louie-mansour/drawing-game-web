@@ -62,9 +62,9 @@ export const playerReady = async (): Promise<Game> => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const toGame = (game: any): Game => {
-  const { order_uuid, invite, players, uuid, state } = game
+  const { owner_uuid, invite, players, uuid, state } = game
   return {
-    ownerUuid: order_uuid,
+    ownerUuid: owner_uuid,
     invite: invite,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     players: players.map((p: any) => toPlayer(p)),
