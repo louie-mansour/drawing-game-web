@@ -60,6 +60,15 @@ export const playerReady = async (): Promise<Game> => {
   return toGame(res.data.game)
 }
 
+export const startGame = async (): Promise<Game> => {
+  const cookies = new Cookies()
+  const accessToken = cookies.get('drawing_accesstoken')
+  const inviteId = cookies.get('drawing_inviteid')
+  const res = await axios.put('/game/start', { game: { invite: inviteId } }, header(accessToken))
+
+  return toGame(res.data.game)
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const toGame = (game: any): Game => {
   const { owner_uuid, invite, players, uuid, state } = game

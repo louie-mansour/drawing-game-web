@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
+import Cookies from 'universal-cookie'
 import { Game } from '../../models/Game'
 import { Player } from '../../models/Player'
-import { playerReady } from '../../services/GameService'
+import { playerReady, startGame } from '../../services/GameService'
+import jwt_decode, { JwtPayload } from 'jwt-decode'
 import './lobby.scss'
 
 const Lobby = ({
@@ -16,6 +18,7 @@ const Lobby = ({
   setGame: (game: Game) => void
 }) => {
   const [isReady, setIsReady] = useState(false)
+  const [isStart, setIsStart] = useState(false)
 
   useEffect(() => {
     const playerReadyUseCase = async () => {
@@ -27,6 +30,23 @@ const Lobby = ({
     }
     playerReadyUseCase()
   }, [isReady])
+
+  useEffect(() => {
+    const startGameUseCase = async () => {
+      if (!isStart) {
+        return
+      }
+      const game = await startGame()
+      setGame(game)
+    }
+    startGameUseCase()
+  }, [isStart])
+
+  const cookies = new Cookies()
+  const accessToken = cookies.get('drawing_accesstoken')
+  const decodedJwt = jwt_decode<JwtPayload>(accessToken)
+  const isOwner = ownerUuid === decodedJwt?.sub
+
   return (
     <div className="lobby">
       <div className="lobby__invite-code">
@@ -48,6 +68,13 @@ const Lobby = ({
           I'm ready
         </button>
       </div>
+      {isOwner && (
+        <div className="lobby__start">
+          <button className="lobby__start-button" onClick={() => setIsStart(true)} type="submit">
+            Start
+          </button>
+        </div>
+      )}
     </div>
   )
 }
