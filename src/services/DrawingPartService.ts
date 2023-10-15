@@ -1,22 +1,25 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import Cookies from 'universal-cookie'
 import { FinishedDrawingPart } from '../components/drawing-area/DrawingArea'
 
-export const submitFinishedDrawingPart = async (drawing: FinishedDrawingPart): Promise<FinishedDrawingPart> => {
+interface DrawingPartDto {
+  base_64_image: string
+}
+
+export const submitFinishedDrawingPart = async (drawingPart: FinishedDrawingPart): Promise<FinishedDrawingPart> => {
   const cookies = new Cookies()
   const accessToken = cookies.get('drawing_accesstoken')
+  const gameUuid = cookies.get('drawing_gameuuid')
   const res = await axios.put(
-    '/drawing/submit',
-    { drawing },
+    `/game/${gameUuid}/drawing/submit`,
+    { drawing_part: toDrawingPartDto(drawingPart) },
     {
       headers: {
         Authorization: `bearer ${accessToken}`,
       },
     }
   )
-  return {
-    base64Image: res.data.drawing.base_64_image,
-  }
+  return toDrawingPart(res)
 }
 
 export const getPreviousDrawingPart = async (): Promise<FinishedDrawingPart> => {
@@ -27,7 +30,17 @@ export const getPreviousDrawingPart = async (): Promise<FinishedDrawingPart> => 
       Authorization: `bearer ${accessToken}`,
     },
   })
+  return toDrawingPart(res)
+}
+
+const toDrawingPartDto = (drawingPart: FinishedDrawingPart): DrawingPartDto => {
   return {
-    base64Image: res.data.drawing.base_64_image,
+    base_64_image: drawingPart.base64Image,
+  }
+}
+
+const toDrawingPart = (res: AxiosResponse): FinishedDrawingPart => {
+  return {
+    base64Image: res.data.drawing_part.base_64_image,
   }
 }

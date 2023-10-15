@@ -10,6 +10,7 @@ export const createGame = async (): Promise<Game> => {
 
   const game = toGame(res.data.game)
   cookies.set('drawing_inviteid', game.invite)
+  cookies.set('drawing_gameuuid', game.uuid)
   return game
 }
 
@@ -28,6 +29,7 @@ export const joinGame = async (inviteCode: string): Promise<Game> => {
 
   const game = toGame(res.data.game)
   cookies.set('drawing_inviteid', game.uuid)
+  cookies.set('drawing_gameuuid', game.uuid)
   return game
 }
 
