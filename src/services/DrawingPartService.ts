@@ -25,7 +25,8 @@ export const submitFinishedDrawingPart = async (drawingPart: FinishedDrawingPart
 export const getPreviousDrawingPart = async (): Promise<FinishedDrawingPart> => {
   const cookies = new Cookies()
   const accessToken = cookies.get('drawing_accesstoken')
-  const res = await axios.get('/drawing/previous', {
+  const gameUuid = cookies.get('drawing_gameuuid')
+  const res = await axios.get(`/game/${gameUuid}/drawing/previous`, {
     headers: {
       Authorization: `bearer ${accessToken}`,
     },

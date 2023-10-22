@@ -19,6 +19,7 @@ const DrawingArea = () => {
   const [finishedDrawingPart, setFinishedDrawingPart] = useState<FinishedDrawingPart | null>(null)
   const [previousDrawingPart, setPreviousDrawingPart] = useState<FinishedDrawingPart | null>(null)
   const [isReset, setIsReset] = useState<boolean>(false)
+  const [rqstPreviousDrawingPart, setRqstPreviousDrawingPart] = useState<boolean>(false)
 
   useEffect(() => {
     const endTurnUseCase = async () => {
@@ -27,16 +28,32 @@ const DrawingArea = () => {
       }
 
       await submitFinishedDrawingPart(finishedDrawingPart)
-      const previousDrawingPart = await getPreviousDrawingPart()
-      setPreviousDrawingPart(previousDrawingPart)
-      startReset()
     }
 
     endTurnUseCase()
   }, [finishedDrawingPart])
 
+  useEffect(() => {
+    const getPreviousDrawingPartUseCase = async () => {
+      if (!rqstPreviousDrawingPart) {
+        return
+      }
+
+      const previousDrawingPart = await getPreviousDrawingPart()
+      setPreviousDrawingPart(previousDrawingPart)
+      setRqstPreviousDrawingPart(false)
+      startReset()
+    }
+
+    getPreviousDrawingPartUseCase()
+  }, [rqstPreviousDrawingPart])
+
   const completeDrawingPart = () => {
     setDrawingPartState(DrawingPartState.Completed)
+  }
+
+  const startRqstPreviousDrawingPart = () => {
+    setRqstPreviousDrawingPart(true)
   }
 
   const startReset = () => {
@@ -61,6 +78,7 @@ const DrawingArea = () => {
         />
       </div>
       <SubmitButton completeDrawingPart={completeDrawingPart} />
+      <SubmitButton completeDrawingPart={startRqstPreviousDrawingPart} />
     </div>
   )
 }
